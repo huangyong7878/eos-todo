@@ -1,0 +1,36 @@
+cmake_minimum_required(VERSION 3.5)
+project(todo VERSION 1.2.1)
+
+set(EOSIO_DEPENDENCY "1.1")
+set(EOSIO_WASMSDK_DEPENDENCY "1.1")
+#set(BOOST_ROOT,"/usr/local/Cellar/boost/1.67.0_1")
+
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(TEST_BUILD_TYPE "Debug")
+    set(CMAKE_BUILD_TYPE "Release")
+else()
+    set(TEST_BUILD_TYPE ${CMAKE_BUILD_TYPE})
+endif()
+
+if(EOSIO_ROOT STREQUAL "" OR NOT EOSIO_ROOT)
+    set(EOSIO_ROOT "/usr/local/eosio")
+endif()
+if(EOSIO_CDT_ROOT STREQUAL "" OR NOT EOSIO_CDT_ROOT)
+    set(EOSIO_CDT_ROOT "/usr/local/eosio.cdt")
+endif()
+list(APPEND CMAKE_MODULE_PATH ${EOSIO_CDT_ROOT}/lib/cmake)
+include(EosioWasmToolchain)
+message("${BOOST_ROOT}")
+include_directories(AFTER ${BOOST_ROOT}/include)
+
+add_subdirectory(${CMAKE_PROJECT_NAME})
+#add_subdirectory(fairdicelogs)
+
+if (APPLE)
+    set(OPENSSL_ROOT "/usr/local/opt/openssl")
+elseif (UNIX)
+    set(OPENSSL_ROOT "/usr/include/openssl")
+endif()
+set(SECP256K1_ROOT "/usr/local")
+
+# include(UnitTestsExternalProject.txt)
